@@ -231,7 +231,7 @@ public class GUI {
 		JMenuItem OpenTopology = new JMenuItem("OpenTopology");
 		OpenTopology.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JFileChooser chooser = new JFileChooser("C:\\Users\\Cloud\\workspace\\Mirlab-switch-2.0.1\\mininet");
+				JFileChooser chooser = new JFileChooser();
 				if (chooser.showOpenDialog(frmMirlabBenchmark) == JFileChooser.APPROVE_OPTION) {
 					File file = chooser.getSelectedFile();
 					try {
