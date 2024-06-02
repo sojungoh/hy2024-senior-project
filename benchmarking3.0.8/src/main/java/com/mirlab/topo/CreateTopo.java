@@ -272,7 +272,7 @@ public class CreateTopo {
 			}
 		}
 
-		// 最前和最后node赋给global变量
+		// global 변수에 처음과 마지막 노드 설정
 		Global.ROOTNODE = nodes[0];
 		Global.LEAFNODE = nodes[Global.NUMBER_OF_TEST_SWITCH - 1];
 		Global.nodes = nodes;

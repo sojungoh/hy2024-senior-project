@@ -55,7 +55,8 @@ public class TopologyChangeDetection {
 			CreateTopo ct = new CreateTopo(Global.SWITCH_ID_OFF_SET);
 			nodes = ct.go();
 
-			Thread.sleep(5000);
+			//Thread.sleep(5000);
+			Thread.sleep(20000);
 
 			OFPortDesc ofdSrcDown;
 			OFPortDesc ofdDstDown;
@@ -72,14 +73,6 @@ public class TopologyChangeDetection {
 							.setState(EnumSet.<OFPortState>of(OFPortState.LINK_DOWN)).build())
 					.setReason(OFPortReason.MODIFY).build();
 
-			/*
-			 * ofmDstDown = Global.FACTORY.buildPortStatus()
-			 * .setDesc(ofdDstDown.createBuilder().setConfig(EnumSet.<
-			 * OFPortConfig> of(OFPortConfig.PORT_DOWN))
-			 * .setState(EnumSet.<OFPortState>
-			 * of(OFPortState.LINK_DOWN)).build())
-			 * .setReason(OFPortReason.MODIFY).build();
-			 */
 			OFPortDesc ofdSrcUp;
 			OFPortDesc ofdDstUp;
 
