@@ -165,13 +165,13 @@ public class GUI {
 	}
 
 	/**
-	 * Initialize the contents of the frame. 系统自带
+	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
 		frmMirlabBenchmark = new JFrame();
 		frmMirlabBenchmark.getContentPane().setFont(new Font("Times New Roman", Font.PLAIN, 12));
 		frmMirlabBenchmark.setFont(new Font("Times New Roman", Font.PLAIN, 12));
-		frmMirlabBenchmark.setTitle("Mir-Lab SDN Benchmark v3.0.6");
+		frmMirlabBenchmark.setTitle("Mir-Lab SDN Benchmark v3.0.8");
 		frmMirlabBenchmark.setResizable(false);
 		frmMirlabBenchmark.setBounds(new Rectangle(50, 50, 50, 50));
 		frmMirlabBenchmark.setBounds(100, 100, 1080, 768);
