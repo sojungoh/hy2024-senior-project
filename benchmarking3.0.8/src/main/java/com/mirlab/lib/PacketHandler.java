@@ -142,7 +142,7 @@ public class PacketHandler {
 				actionPortNum = Integer.parseInt(action.substring(action.indexOf("=") + 1, action.indexOf(","))) - 1;
 				if (node.getPortList().get(actionPortNum).getConnectedPort() != null) {
 					// this port connects with another node's port
-					if (node.getPortList().get(actionPortNum).getPortState() == 0
+					if (node.getPortList().get(actionPortNum).getPortState() == 0 // 0:up 1:down
 							&& node.getPortList().get(actionPortNum).getConnectedPort().getPortState() == 0
 							&& node.getPortList().get(actionPortNum).getLinkState() == 0
 							&& node.getPortList().get(actionPortNum).getConnectedPort().getLinkState() == 0) {
@@ -175,7 +175,7 @@ public class PacketHandler {
 			}
 
 			if ((Byte.toUnsignedInt(data[13]) == 0xcc && Byte.toUnsignedInt(data[12]) == 136)
-					|| (Byte.toUnsignedInt(data[13]) == 66 && Byte.toUnsignedInt(data[12]) == 137)) {
+					/*|| (Byte.toUnsignedInt(data[13]) == 66 && Byte.toUnsignedInt(data[12]) == 137)*/) {
 				// lldp message
 
 				logger.debug("LLDP Received..Action Port is " + actionPortNum);
@@ -187,12 +187,8 @@ public class PacketHandler {
 							&& (Byte.toUnsignedInt(data[13]) == 0xcc && Byte.toUnsignedInt(data[12]) == 136)) {
 
 						BenchmarkTimer.ADD_CURRENT_TIME(node.getLLDP_OUT());// getLLDP_OUT: ArrayList<Long>에 현재 시간 추가
-
 					}
 
-				}
-
-				if (Global.southboundMetric == SouthboundMetric.TOPOLOGY_DISCOVERY_TIME) {
 					if (Tasks.HAS_STARTED) {
 
 						if ((Byte.toUnsignedInt(data[13]) == 0xcc && Byte.toUnsignedInt(data[12]) == 136)) {
@@ -215,70 +211,62 @@ public class PacketHandler {
 					}
 				}
 
-				// made by haojun 20170406
-
 				// made by haojun 20170407
 				if (Global.southboundMetric == SouthboundMetric.TOPOLOGY_CHANGE_DETECTION_TIME_LINK_DOWN_UP
-						&& (Byte.toUnsignedInt(data[13]) == 0xcc && Byte.toUnsignedInt(data[12]) == 136)) {
+						/*&& (Byte.toUnsignedInt(data[13]) == 0xcc && Byte.toUnsignedInt(data[12]) == 136)*/) {
 					if (TopologyChangeDetection.HAS_STARTED) {
 
 						BenchmarkTimer.ADD_CURRENT_TIME(Result.TOPOLOGY_CHANGE_DETECTION_TIME_LIST_LLDP);
 
 						if (node == Global.ROOTNODE) {
-							new Thread(new Runnable() {
+							new Thread(() -> {
+								node.sendPacket(TopologyChangeDetection.ofmSrcDown);
+								node.getPortList().getLast().getConnectedPort().getBelong2Node()
+										.sendPacket(TopologyChangeDetection.ofmDstDown);
+								node.getPortList().getLast().setLinkState(1);
+								node.getPortList().getLast().setPortState(1);
+								node.getPortList().getLast().getConnectedPort().setLinkState(1);
+								node.getPortList().getLast().getConnectedPort().setPortState(1);
+								BenchmarkTimer
+										.ADD_CURRENT_TIME(Result.TOPOLOGY_CHANGE_DETECTION_TIME_LIST_PORTSTATUS);
 
-								public void run() {
-									node.sendPacket((OFMessage) TopologyChangeDetection.ofmSrcDown);
-									node.getPortList().getLast().getConnectedPort().getBelong2Node()
-											.sendPacket(TopologyChangeDetection.ofmDstDown);
-									node.getPortList().getLast().setLinkState(1);
-									node.getPortList().getLast().setPortState(1);
-									node.getPortList().getLast().getConnectedPort().setLinkState(1);
-									node.getPortList().getLast().getConnectedPort().setPortState(1);
-									BenchmarkTimer
-											.ADD_CURRENT_TIME(Result.TOPOLOGY_CHANGE_DETECTION_TIME_LIST_PORTSTATUS);
-
-									try {
-										if (Global.conTroller == Controller.ONOS) {
-											Thread.sleep(3000);
-										} else if (Global.conTroller == Controller.OPENDAYLIGHT) {
-											Thread.sleep(5000);
-										} else {
-
-											Thread.sleep(15000);
-
-										}
-									} catch (InterruptedException e) {
-										// TODO Auto-generated catch block
-										e.printStackTrace();
-									}
-
-									node.sendPacket((OFMessage) TopologyChangeDetection.ofmSrcUp);
-									node.getPortList().getLast().getConnectedPort().getBelong2Node()
-											.sendPacket((OFMessage) TopologyChangeDetection.ofmDstUp);
-									node.getPortList().getLast().setLinkState(0);
-									node.getPortList().getLast().setPortState(0);
-									node.getPortList().getLast().getConnectedPort().setLinkState(0);
-									node.getPortList().getLast().getConnectedPort().setPortState(0);
-
-									BenchmarkTimer
-											.ADD_CURRENT_TIME(Result.TOPOLOGY_CHANGE_DETECTION_TIME_LIST_PORTSTATUS);
-
-									try {
+								try {
+									if (Global.conTroller == Controller.ONOS) {
+										Thread.sleep(3000);
+									} else if (Global.conTroller == Controller.OPENDAYLIGHT) {
 										Thread.sleep(5000);
-									} catch (InterruptedException e) {
-										// TODO Auto-generated catch block
-										e.printStackTrace();
+									} else {
+
+										Thread.sleep(15000);
+
 									}
-
-									// TopologyChangeDetection.IS_COMPLETED =
-									// true;
-									TopologyChangeDetection.HAS_STARTED = false;
+								} catch (InterruptedException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
 								}
+
+								node.sendPacket(TopologyChangeDetection.ofmSrcUp);
+								node.getPortList().getLast().getConnectedPort().getBelong2Node()
+										.sendPacket(TopologyChangeDetection.ofmDstUp);
+								node.getPortList().getLast().setLinkState(0);
+								node.getPortList().getLast().setPortState(0);
+								node.getPortList().getLast().getConnectedPort().setLinkState(0);
+								node.getPortList().getLast().getConnectedPort().setPortState(0);
+
+								BenchmarkTimer
+										.ADD_CURRENT_TIME(Result.TOPOLOGY_CHANGE_DETECTION_TIME_LIST_PORTSTATUS);
+
+								try {
+									Thread.sleep(5000);
+								} catch (InterruptedException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+
+								// TopologyChangeDetection.IS_COMPLETED = true;
+								TopologyChangeDetection.HAS_STARTED = false;
 							}).start();
-
 						}
-
 					}
 
 				} else if (Global.southboundMetric == SouthboundMetric.NETWORK_DISCOVERY_SIZE_NS
@@ -288,7 +276,7 @@ public class PacketHandler {
 					}
 				}
 
-			} else {// asynchronous metric 非lldp message
+			} else {// asynchronous metric - 알 수 없는 lldp message
 
 				logger.debug("Received Packet_out(unknown packet reply)");
 

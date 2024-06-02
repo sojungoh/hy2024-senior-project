@@ -55,37 +55,48 @@ public class TopologyChangeDetection {
 			CreateTopo ct = new CreateTopo(Global.SWITCH_ID_OFF_SET);
 			nodes = ct.go();
 
-			//Thread.sleep(5000);
-			Thread.sleep(20000);
+			// TODO: Topology Discovery 시작된 다음에 진행되어야 함
+			Thread.sleep(5000);
 
 			OFPortDesc ofdSrcDown;
 			OFPortDesc ofdDstDown;
 
 			ofdSrcDown = nodes[0].getPortList().getLast().getPortDesc();
+			// Asynchronous Message - Port Status
 			ofmSrcDown = Global.FACTORY.buildPortStatus()
-					.setDesc(ofdSrcDown.createBuilder().setConfig(EnumSet.<OFPortConfig>of(OFPortConfig.PORT_DOWN))
-							.setState(EnumSet.<OFPortState>of(OFPortState.LINK_DOWN)).build())
+					.setDesc(ofdSrcDown.createBuilder()
+							.setConfig(EnumSet.of(OFPortConfig.PORT_DOWN))
+							.setState(EnumSet.of(OFPortState.LINK_DOWN))
+							.build())
 					.setReason(OFPortReason.MODIFY).build();
 
 			ofdDstDown = nodes[0].getPortList().getLast().getConnectedPort().getPortDesc();
+			// Asynchronous Message - Port Status
 			ofmDstDown = Global.FACTORY.buildPortStatus()
-					.setDesc(ofdDstDown.createBuilder().setConfig(EnumSet.<OFPortConfig>of(OFPortConfig.PORT_DOWN))
-							.setState(EnumSet.<OFPortState>of(OFPortState.LINK_DOWN)).build())
+					.setDesc(ofdDstDown.createBuilder()
+							.setConfig(EnumSet.of(OFPortConfig.PORT_DOWN))
+							.setState(EnumSet.of(OFPortState.LINK_DOWN))
+							.build())
 					.setReason(OFPortReason.MODIFY).build();
 
 			OFPortDesc ofdSrcUp;
 			OFPortDesc ofdDstUp;
 
 			ofdSrcUp = nodes[0].getPortList().getLast().getPortDesc();
-			ofmSrcUp = Global.FACTORY.buildPortStatus().setDesc(ofdSrcUp).setReason(OFPortReason.MODIFY).build();
+			ofmSrcUp = Global.FACTORY.buildPortStatus()
+						.setDesc(ofdSrcUp)
+						.setReason(OFPortReason.MODIFY).build();
 
 			ofdDstUp = nodes[0].getPortList().getLast().getConnectedPort().getPortDesc();
-			ofmDstUp = Global.FACTORY.buildPortStatus().setDesc(ofdDstUp).setReason(OFPortReason.MODIFY).build();
+			ofmDstUp = Global.FACTORY.buildPortStatus()
+						.setDesc(ofdDstUp)
+						.setReason(OFPortReason.MODIFY).build();
 
 			HAS_STARTED = true;
 			Tasks.HAS_STARTED = true;
 
-			Thread.sleep(15000);
+			//Thread.sleep(15000);
+			Thread.sleep(40000);
 
 			Log.ADD_LOG_PANEL("Test Completed!", TopologyChangeDetection.class.getSimpleName());
 
@@ -97,22 +108,19 @@ public class TopologyChangeDetection {
 				if (timeOfLinkDown == 0 && (Long) Result.TOPOLOGY_CHANGE_DETECTION_TIME_LIST_LLDP.get(i + 1)
 						- (Long) Result.TOPOLOGY_CHANGE_DETECTION_TIME_LIST_LLDP.get(0) > (double) 2000000000) {
 
-					timeOfLinkDown = (Long) Result.TOPOLOGY_CHANGE_DETECTION_TIME_LIST_LLDP.get(i + 1)
-							- (Long) Result.TOPOLOGY_CHANGE_DETECTION_TIME_LIST_LLDP.get(0);
+					timeOfLinkDown = (Long) Result.TOPOLOGY_CHANGE_DETECTION_TIME_LIST_LLDP.get(i + 1) // 컨트롤러에서 보낸 첫 lldp
+							- (Long) Result.TOPOLOGY_CHANGE_DETECTION_TIME_LIST_LLDP.get(0); // 처음 asynchorouns msg 전송 시간
 
 					timeOfLinkUp = (Long) Result.TOPOLOGY_CHANGE_DETECTION_TIME_LIST_LLDP.get(i + 2)
 							- (Long) Result.TOPOLOGY_CHANGE_DETECTION_TIME_LIST_LLDP.get(0);
 
+					// TODO: 이걸 왜 하지?
 					if (Math.abs(timeOfLinkDown - timeOfLinkUp) > (long) 10000000) {
 						timeOfLinkUp = timeOfLinkDown - 432123;// 黑暗面？
 					}
-
 				}
-
 			}
 
-			// long first = 0;
-			// long last = 0;
 			// down
 			Result.ADD_RESULT(df.format((double) timeOfLinkDown / (double) 1000000), 2, 2);
 			// up
@@ -124,9 +132,9 @@ public class TopologyChangeDetection {
 
 			Log.ADD_LOG_PANEL("Link Up Detection Time: " + df.format((double) timeOfLinkUp / (double) 1000000) + " ms",
 					TopologyChangeDetection.class.getSimpleName());
-			//
 			Main.gui.S_progressBarTotal.setValue(1);
 			Initializer.INITIAL_CHANNEL_POOL();
+
 		} catch (InterruptedException e1) {
 			e1.printStackTrace();
 			Main.gui.S_progressBarTotal.setValue(1);

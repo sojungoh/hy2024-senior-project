@@ -91,7 +91,7 @@ public class BaseHandler extends IdleStateAwareChannelHandler {
 			break;
 		case PACKET_OUT:
 			logger.debug("PACKET_OUT message Received.");
-			logger.debug(ofMessage.toString());
+			//logger.debug(ofMessage.toString());
 			PacketHandler.HANDEL_PACKET_OUT(ofMessage, node);
 			break;
 
