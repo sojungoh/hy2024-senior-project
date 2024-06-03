@@ -137,7 +137,13 @@ public class PacketHandler {
 		try {
 
 			if (action.contains("flood")) {
-
+				/*
+				 *	FLOOD: Represents flooding using the normal pipeline of the switch. Can be
+				 *	used only as an output port, in general will send the packet out all standard ports, but not to the
+				 *	ingress port, or ports that are in OFPPS_BLOCKED state. The switch may also use the packet VLAN ID
+				 *	to select which ports to flood.
+				 */
+				logger.debug("flood msg: " + packetOut);
 			} else {
 				actionPortNum = Integer.parseInt(action.substring(action.indexOf("=") + 1, action.indexOf(","))) - 1;
 				if (node.getPortList().get(actionPortNum).getConnectedPort() != null) {
@@ -223,10 +229,10 @@ public class PacketHandler {
 								node.sendPacket(TopologyChangeDetection.ofmSrcDown);
 								node.getPortList().getLast().getConnectedPort().getBelong2Node()
 										.sendPacket(TopologyChangeDetection.ofmDstDown);
-								node.getPortList().getLast().setLinkState(1);
-								node.getPortList().getLast().setPortState(1);
-								node.getPortList().getLast().getConnectedPort().setLinkState(1);
-								node.getPortList().getLast().getConnectedPort().setPortState(1);
+								node.getPortList().getLast().setLinkState(1); // 1: down
+								node.getPortList().getLast().setPortState(1); // 1: down
+								node.getPortList().getLast().getConnectedPort().setLinkState(1); // 1: down
+								node.getPortList().getLast().getConnectedPort().setPortState(1); // 1: down
 								BenchmarkTimer
 										.ADD_CURRENT_TIME(Result.TOPOLOGY_CHANGE_DETECTION_TIME_LIST_PORTSTATUS);
 
@@ -277,9 +283,10 @@ public class PacketHandler {
 				}
 
 			} else {// asynchronous metric - 알 수 없는 lldp message
-
-				logger.debug("Received Packet_out(unknown packet reply)");
-
+				if(Byte.toUnsignedInt(data[13]) == 66 && Byte.toUnsignedInt(data[12]) == 137)
+					logger.debug("data[13]=66 msg: " + packetOut);
+				else
+					logger.debug("Received Packet_out(unknown packet reply)");
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -399,7 +406,7 @@ public class PacketHandler {
 
 						} else if (Global.PROVISINIONING_PACKET_TYPE == Global.UDP_PACKET
 								|| Global.PROVISINIONING_PACKET_TYPE == Global.TCP_PACKET) {
-							// udp tcp
+							// Southbound - udp tcp
 
 							BenchmarkTimer.ADD_CURRENT_TIME(Result.REACTIVE_PATH_PROVISIONING_TIME_LIST_FLOWMOD);
 
