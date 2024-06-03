@@ -69,7 +69,7 @@ public class BaseHandler extends IdleStateAwareChannelHandler {
 			break;
 		case STATS_REQUEST:
 			logger.debug("Multipart Request message Received. ");
-			logger.debug(ofMessage.toString());
+			//logger.debug(ofMessage.toString());
 			PacketHandler.HANDEL_STATES_REQUEST(ctx, ofMessage, node);
 			break;
 		case ROLE_REQUEST:

@@ -47,8 +47,8 @@ public class ReactivePathProvisioningTime {
 			Thread.sleep(20000);
 
 			start_task();
-
 			result_check();
+
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -68,8 +68,8 @@ public class ReactivePathProvisioningTime {
 
 		try {
 
-			ArrayList<OFMessage> srctemp = new ArrayList<OFMessage>();
-			ArrayList<OFMessage> dsttemp = new ArrayList<OFMessage>();
+			ArrayList<OFMessage> srctemp = new ArrayList<>();
+			ArrayList<OFMessage> dsttemp = new ArrayList<>();
 
 			for (int i = 0; i < Global.NODE_SIZE; i++) {
 
@@ -131,9 +131,9 @@ public class ReactivePathProvisioningTime {
 				sendPacket(Global.dstHosts[0].getConnectedNode(), temp2);
 
 			} else {
-				// tcp udp
+				// Southbound - tcp udp
 
-				ArrayList<OFMessage> temp = new ArrayList<OFMessage>();
+				ArrayList<OFMessage> temp = new ArrayList<>();
 				OFMessage ofpi = null;
 				for (int i = 0; i < Global.NODE_SIZE; i++) {
 					for (int j = 0; j < Global.NODE_SIZE; j++) {
@@ -233,17 +233,18 @@ public class ReactivePathProvisioningTime {
 
 					// record time
 					if (System.nanoTime() - iniTime < (long) Global.TEST_TIME * 1000000000) {
+						// controller Flow_Mod 응답이 Packet_In과 1:1 대응되었을 때 다음 turn 진행
 						if (Result.REACTIVE_PATH_PROVISIONING_TIME_LIST_FLOWMOD
 								.size() == Result.REACTIVE_PATH_PROVISIONING_TIME_LIST_OFIN.size()) {
 
 							Global.count = count;
 							System.out.println("### FLOW COUNT :: " + Global.count);
 
+							// Packet_in 전송 + 시간 측정 시작
 							nodeChannelF.getChannel().write((OFMessage) of.get(count++));
 							Result.REACTIVE_PATH_PROVISIONING_TIME_LIST_OFIN.add(System.nanoTime());
 						}
 					} else {
-
 						break n;
 					}
 				} else {

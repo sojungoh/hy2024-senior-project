@@ -419,6 +419,10 @@ public class CreateTopo {
 			nodes[i - 1].setNextNode(nodes[i]);
 		}
 
+		nodes[Global.NUMBER_OF_TEST_SWITCH - 1].getPortList().get(1).setConnectedPort(nodes[0].getPortList().get(0));
+		nodes[0].getPortList().get(0).setConnectedPort(nodes[Global.NUMBER_OF_TEST_SWITCH - 1].getPortList().get(1));
+		nodes[Global.NUMBER_OF_TEST_SWITCH - 1].setNextNode(nodes[0]);
+
 		// create link between switch and host
 		nodes[0].addPort();
 		for (int n = 0; n < srcHosts.length; n++) {
@@ -429,12 +433,9 @@ public class CreateTopo {
 			nodes[nodes.length / 2].getPortList().getLast().addConnectedHostToList(dstHosts[n]);
 		}
 
-		nodes[Global.NUMBER_OF_TEST_SWITCH - 1].getPortList().get(1).setConnectedPort(nodes[0].getPortList().get(0));
-		nodes[0].getPortList().get(0).setConnectedPort(nodes[Global.NUMBER_OF_TEST_SWITCH - 1].getPortList().get(1));
-		nodes[Global.NUMBER_OF_TEST_SWITCH - 1].setNextNode(nodes[0]);
-
 		// global 변수에 처음과 마지막 노드 설정
 		Global.ROOTNODE = nodes[0];
+		// TODO: LEAFNODE는 nodes[nodes.length / 2] 아닌가?
 		Global.LEAFNODE = nodes[Global.NUMBER_OF_TEST_SWITCH - 1];
 		Global.nodes = nodes;
 		Global.srcHosts = srcHosts;

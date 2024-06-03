@@ -281,7 +281,7 @@ public class S_RunButton {
 			break;
 		case REACTIVE_PATH_PROVISIONING_TIME:
 
-			Global.PROGRESS_MAX_VALUE = 32 + Global.TEST_TIME;
+			Global.PROGRESS_MAX_VALUE = 32 + Global.TEST_TIME; // init: 32s + 5s = 37s
 			
 			if (Global.PROVISINIONING_PACKET_TYPE == Global.ARP_REPLY) {
 				Global.PROGRESS_MAX_VALUE = 27 + Global.TEST_TIME;

@@ -162,7 +162,7 @@ public class Node {
 		OFPortDesc temp = OpenFlow13_PacketMaker.PORT_DESC(name, this.portList.size() + 1);
 
 		Port port = new Port(temp, (this.portList.size() + 1), this);
-		// TODO: 왜 0번 포트의 컨트롤러와의 tcp channel을 추가 포트에 할당하지?
+		// TODO: 왜 여기서 0번 포트의 컨트롤러와의 tcp channel을 추가 포트에 할당하지?
 		if ((this.portList.size() + 1) >= 2) {
 			port.setChannelFuture(this.portList.get(0).getChannelFuture());
 		}
