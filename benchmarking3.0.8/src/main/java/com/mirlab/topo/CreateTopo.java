@@ -316,16 +316,16 @@ public class CreateTopo {
 		}
 
 		// create dstHosts
-		for (int n = Global.NODE_SIZE + 1; n < 2 * Global.NODE_SIZE + 1; n++) {
+		for (int n = 1; n < Global.NODE_SIZE + 1; n++) {
 
 			// add host
 			Host h5;
 			if (n < 14) {
-				h5 = new Host(Global.HOST_IP[0] + "." + Global.HOST_IP[1] + ".2." + (n + 1),
+				h5 = new Host(Global.HOST_IP[0] + "." + Global.HOST_IP[1] + ".2." + (Global.NODE_SIZE + n + 1),
 						Global.HOST_MAC + ":aa:aa:aa:ae:" + "0" + Integer.toHexString(n));
 
 			} else {
-				h5 = new Host(Global.HOST_IP[0] + "." + Global.HOST_IP[1] + ".2." + (n + 1),
+				h5 = new Host(Global.HOST_IP[0] + "." + Global.HOST_IP[1] + ".2." + (Global.NODE_SIZE + n + 1),
 						Global.HOST_MAC + ":aa:aa:aa:ae:" + Integer.toHexString(n));
 			}
 
