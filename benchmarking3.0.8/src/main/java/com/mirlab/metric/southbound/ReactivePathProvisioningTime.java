@@ -43,7 +43,8 @@ public class ReactivePathProvisioningTime {
 
 		try {
 			initi();
-			
+
+			/* TODO: 이 정도만 쉬면 TCP connection 전부 완료? */
 			Thread.sleep(20000);
 
 			start_task();

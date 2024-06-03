@@ -303,12 +303,12 @@ public class CreateTopo {
 
 			// add host
 			Host h1;
-			if (n < 16) {
-				h1 = new Host(Global.HOST_IP[0] + "." + Global.HOST_IP[1] + ".0." + (n + 1),
+			if (n < 14) {
+				h1 = new Host(Global.HOST_IP[0] + "." + Global.HOST_IP[1] + ".2." + (n + 1),
 						Global.HOST_MAC + ":aa:aa:aa:aa:" + "0" + Integer.toHexString(n));
 
 			} else {
-				h1 = new Host(Global.HOST_IP[0] + "." + Global.HOST_IP[1] + ".0." + (n + 1),
+				h1 = new Host(Global.HOST_IP[0] + "." + Global.HOST_IP[1] + ".2." + (n + 1),
 						Global.HOST_MAC + ":aa:aa:aa:aa:" + Integer.toHexString(n));
 			}
 
@@ -316,16 +316,16 @@ public class CreateTopo {
 		}
 
 		// create dstHosts
-		for (int n = 1; n < Global.NODE_SIZE + 1; n++) {
+		for (int n = Global.NODE_SIZE + 1; n < 2 * Global.NODE_SIZE + 1; n++) {
 
 			// add host
 			Host h5;
-			if (n < 16) {
-				h5 = new Host(Global.HOST_IP[0] + "." + Global.HOST_IP[1] + ".1." + (n + 1),
+			if (n < 14) {
+				h5 = new Host(Global.HOST_IP[0] + "." + Global.HOST_IP[1] + ".2." + (n + 1),
 						Global.HOST_MAC + ":aa:aa:aa:ae:" + "0" + Integer.toHexString(n));
 
 			} else {
-				h5 = new Host(Global.HOST_IP[0] + "." + Global.HOST_IP[1] + ".1." + (n + 1),
+				h5 = new Host(Global.HOST_IP[0] + "." + Global.HOST_IP[1] + ".2." + (n + 1),
 						Global.HOST_MAC + ":aa:aa:aa:ae:" + Integer.toHexString(n));
 			}
 
@@ -435,8 +435,7 @@ public class CreateTopo {
 
 		// global 변수에 처음과 마지막 노드 설정
 		Global.ROOTNODE = nodes[0];
-		// TODO: LEAFNODE는 nodes[nodes.length / 2] 아닌가?
-		Global.LEAFNODE = nodes[Global.NUMBER_OF_TEST_SWITCH - 1];
+		Global.LEAFNODE = nodes[nodes.length / 2];
 		Global.nodes = nodes;
 		Global.srcHosts = srcHosts;
 		Global.dstHosts = dstHosts;
