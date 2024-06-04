@@ -94,8 +94,7 @@ public class PacketHandler {
 				.setNTables((short) 254) // number of tables supported by datapath
 				.setCapabilities(EnumSet.of(OFCapabilities.FLOW_STATS, OFCapabilities.TABLE_STATS,
 						OFCapabilities.PORT_STATS, OFCapabilities.QUEUE_STATS,
-						OFCapabilities.ARP_MATCH_IP, OFCapabilities.GROUP_STATS,
-						OFCapabilities.PORT_BLOCKED))
+						OFCapabilities.GROUP_STATS, OFCapabilities.PORT_BLOCKED))
 				.build();
 
 		// ctx.getChannel().write(featuresReply);
