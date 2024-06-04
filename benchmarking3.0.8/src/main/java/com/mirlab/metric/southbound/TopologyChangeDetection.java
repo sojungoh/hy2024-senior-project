@@ -68,7 +68,7 @@ public class TopologyChangeDetection {
 							.setConfig(EnumSet.of(OFPortConfig.PORT_DOWN))
 							.setState(EnumSet.of(OFPortState.LINK_DOWN))
 							.build())
-					.setReason(OFPortReason.MODIFY).build(); // TODO: OFPortReason.DELETE
+					.setReason(OFPortReason.DELETE).build(); // TODO: OFPortReason.DELETE
 
 			ofdDstDown = nodes[0].getPortList().getLast().getConnectedPort().getPortDesc();
 			// Asynchronous Message - Port Status
@@ -77,7 +77,7 @@ public class TopologyChangeDetection {
 							.setConfig(EnumSet.of(OFPortConfig.PORT_DOWN))
 							.setState(EnumSet.of(OFPortState.LINK_DOWN))
 							.build())
-					.setReason(OFPortReason.MODIFY).build(); // TODO: OFPortReason.DELETE
+					.setReason(OFPortReason.DELETE).build(); // TODO: OFPortReason.DELETE
 
 			OFPortDesc ofdSrcUp;
 			OFPortDesc ofdDstUp;
@@ -85,12 +85,12 @@ public class TopologyChangeDetection {
 			ofdSrcUp = nodes[0].getPortList().getLast().getPortDesc();
 			ofmSrcUp = Global.FACTORY.buildPortStatus()
 						.setDesc(ofdSrcUp)
-						.setReason(OFPortReason.MODIFY).build(); // TODO: OFPortReason.ADD
+						.setReason(OFPortReason.ADD).build(); // TODO: OFPortReason.ADD
 
 			ofdDstUp = nodes[0].getPortList().getLast().getConnectedPort().getPortDesc();
 			ofmDstUp = Global.FACTORY.buildPortStatus()
 						.setDesc(ofdDstUp)
-						.setReason(OFPortReason.MODIFY).build(); // TODO: OFPortReason.ADD
+						.setReason(OFPortReason.ADD).build(); // TODO: OFPortReason.ADD
 
 			HAS_STARTED = true;
 			Tasks.HAS_STARTED = true;
