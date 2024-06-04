@@ -89,9 +89,13 @@ public class PacketHandler {
 	public static void HANDEL_FEATURES_REQUEST(ChannelHandlerContext ctx, OFMessage ofMessage, Node node) {
 
 		OFFeaturesReply featuresReply = Global.FACTORY.buildFeaturesReply().setXid(ofMessage.getXid())
-				.setDatapathId(DatapathId.of(node.getDpid())).setNBuffers((long) 256).setNTables((short) 254)
-				.setCapabilities(EnumSet.<OFCapabilities>of(OFCapabilities.FLOW_STATS, OFCapabilities.TABLE_STATS,
-						OFCapabilities.PORT_STATS, OFCapabilities.QUEUE_STATS))
+				.setDatapathId(DatapathId.of(node.getDpid()))
+				.setNBuffers((long) 256) // max packets buffered at once
+				.setNTables((short) 254) // number of tables supported by datapath
+				.setCapabilities(EnumSet.of(OFCapabilities.FLOW_STATS, OFCapabilities.TABLE_STATS,
+						OFCapabilities.PORT_STATS, OFCapabilities.QUEUE_STATS,
+						OFCapabilities.ARP_MATCH_IP, OFCapabilities.GROUP_STATS,
+						OFCapabilities.PORT_BLOCKED))
 				.build();
 
 		// ctx.getChannel().write(featuresReply);
