@@ -41,12 +41,12 @@ public class TopologyDiscovery {
 			CreateTopo ct = new CreateTopo(Global.SWITCH_ID_OFF_SET);
 			nodes = ct.go();
 
-			Thread.sleep(10000); // 10s
+			Thread.sleep(10000); // 10s - controller와 switch 간 tcp 연결 완료될 때까지 wait
 
-			HAS_STARTED = true;
+			HAS_STARTED = true; // useless
 			Tasks.HAS_STARTED = true;
 
-			try { // 휴식 15s
+			try { // 휴식 15s - Trial Duration
 
 				Thread.sleep(15000);
 
@@ -62,7 +62,6 @@ public class TopologyDiscovery {
 				for (int j = 0; j < nodes[i].getLLDP_IN().size(); j++) {
 					Result.TOPOLOGY_DISCOVERY_LLDP_IN.add(nodes[i].getLLDP_IN().get(j));
 				}
-
 			}
 
 			Log.ADD_LOG_PANEL("Tasks 0 Completed. Discovery Time: "

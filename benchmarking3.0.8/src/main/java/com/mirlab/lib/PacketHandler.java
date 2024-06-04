@@ -209,8 +209,16 @@ public class PacketHandler {
 									}
 								}
 							} else {
-								if (node.getLLDP_IN().size() < node.getPortList().size()) {
-									BenchmarkTimer.ADD_CURRENT_TIME(node.getLLDP_IN());
+								if(node == Global.ROOTNODE || node == Global.LEAFNODE) {
+									// Ring
+									if(node.getLLDP_IN().size() < 2) {
+										BenchmarkTimer.ADD_CURRENT_TIME(node.getLLDP_IN());
+									}
+								}
+								else {
+									if (node.getLLDP_IN().size() < node.getPortList().size()) {
+										BenchmarkTimer.ADD_CURRENT_TIME(node.getLLDP_IN());
+									}
 								}
 							}
 						}
