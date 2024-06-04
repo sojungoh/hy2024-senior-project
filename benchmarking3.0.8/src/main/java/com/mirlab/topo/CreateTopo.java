@@ -436,7 +436,8 @@ public class CreateTopo {
 		// global 변수에 처음과 마지막 노드 설정
 		Global.ROOTNODE = nodes[0];
 		// TODO: LEAFNODE는 nodes[nodes.length / 2] 아닌가?
-		Global.LEAFNODE = nodes[Global.NUMBER_OF_TEST_SWITCH - 1];
+		//Global.LEAFNODE = nodes[Global.NUMBER_OF_TEST_SWITCH - 1];
+		Global.LEAFNODE = nodes[nodes.length / 2];
 		Global.nodes = nodes;
 		Global.srcHosts = srcHosts;
 		Global.dstHosts = dstHosts;
