@@ -141,7 +141,8 @@ public class PacketMaker_NEW {
 
 		Match m = Global.FACTORY.buildMatchV3().setOxmList(oxmList).build();
 
-		OFPacketIn ofpi = Global.FACTORY.buildPacketIn().setMatch(m).setBufferId(OFBufferId.NO_BUFFER)
+		OFPacketIn ofpi = Global.FACTORY.buildPacketIn()
+				.setMatch(m).setBufferId(OFBufferId.NO_BUFFER)
 				.setTotalLen(tempPacket.length).setXid((long) 0).setReason(OFPacketInReason.ACTION)
 				.setTableId(TableId.of(0)).setData(tempPacket).build();
 		return ofpi;
@@ -158,7 +159,7 @@ public class PacketMaker_NEW {
 		// request
 		case Global.ARP_REQUEST:
 			e.setSourceMac(src.getMac());
-			e.setDestinationMac("ff:ff:ff:ff:ff:ff");
+			e.setDestinationMac("ff:ff:ff:ff:ff:ff"); // broadcast
 			e.setEthernetType("arp");
 			tempHeader = e.toByte();
 
@@ -244,7 +245,7 @@ public class PacketMaker_NEW {
 
 			// ethernet trailer
 			for (int i = 42; i < 60; i++) {
-				tempPacket[i] = 0x00;
+				tempPacket[i] = (byte)0x00;
 			}
 			break;
 		}

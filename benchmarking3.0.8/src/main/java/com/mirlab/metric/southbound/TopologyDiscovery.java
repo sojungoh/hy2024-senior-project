@@ -20,8 +20,8 @@ import com.mirlab.topo.CreateTopo;
 
 public class TopologyDiscovery {
 	public static Logger logger = LoggerFactory.getLogger(BaseHandler.class);
-	public static boolean HAS_STARTED = false;
-	public static boolean IS_COMPLETED = false;
+	//public static boolean HAS_STARTED = false;
+	//public static boolean IS_COMPLETED = false;
 	private static DecimalFormat df = new DecimalFormat("#0.00000");
 
 	public static void go() {
@@ -41,10 +41,9 @@ public class TopologyDiscovery {
 			CreateTopo ct = new CreateTopo(Global.SWITCH_ID_OFF_SET);
 			nodes = ct.go();
 
-			Thread.sleep(10000); // 10s - controller와 switch 간 tcp 연결 완료될 때까지 wait
-
-			HAS_STARTED = true; // useless
 			Tasks.HAS_STARTED = true;
+
+			Thread.sleep(10000); // 10s - controller와 switch 간 tcp 연결 완료될 때까지 wait
 
 			try { // 휴식 15s - Trial Duration
 
@@ -81,6 +80,8 @@ public class TopologyDiscovery {
 			Main.gui.S_progressBarTotal.setValue(1);
 
 			Initializer.INITIAL_CHANNEL_POOL();
+
+			Tasks.HAS_STARTED = false;
 
 		} catch (InterruptedException e1) {
 			e1.printStackTrace();

@@ -180,24 +180,27 @@ public class PacketHandler {
 				}
 			}
 
-			if ((Byte.toUnsignedInt(data[13]) == 0xcc && Byte.toUnsignedInt(data[12]) == 136)
-					/*|| (Byte.toUnsignedInt(data[13]) == 66 && Byte.toUnsignedInt(data[12]) == 137)*/) {
-				// lldp message
+			/*
+			* if data 12-13bytes are 0x88cc,
+			* it means that data type is a 802.1 Link Layer Discovery Protocol (LLDP)
+			* if data 12-13bytes are 0x8942,
+			* it means that data type is unknown, and it actually represents packet_in message
+			*/
+			if ((Byte.toUnsignedInt(data[12]) == 0x88 && Byte.toUnsignedInt(data[13]) == 0xcc)
+					|| (Byte.toUnsignedInt(data[12]) == 0x89 && Byte.toUnsignedInt(data[13]) == 0x42)) {
 
 				logger.debug("LLDP Received..Action Port is " + actionPortNum);
 
-				// made by haojun 20170406
 				if (Global.southboundMetric == SouthboundMetric.TOPOLOGY_DISCOVERY_TIME) {
 
-					if (node.getLLDP_OUT().size() < node.getPortList().size() && Tasks.HAS_STARTED
-							&& (Byte.toUnsignedInt(data[13]) == 0xcc && Byte.toUnsignedInt(data[12]) == 136)) {
+					if(Tasks.HAS_STARTED) {
+						if(Byte.toUnsignedInt(data[12]) == 0x88 && Byte.toUnsignedInt(data[13]) == 0xcc) {
 
-						BenchmarkTimer.ADD_CURRENT_TIME(node.getLLDP_OUT());// getLLDP_OUT: ArrayList<Long>에 현재 시간 추가
-					}
+							if(node.getLLDP_OUT().size() < node.getPortList().size())
+								BenchmarkTimer.ADD_CURRENT_TIME(node.getLLDP_OUT()); // getLLDP_OUT: ArrayList<Long>에 현재 시간 추가
 
-					if (Tasks.HAS_STARTED) {
-
-						if ((Byte.toUnsignedInt(data[13]) == 0xcc && Byte.toUnsignedInt(data[12]) == 136)) {
+						}
+						else if(Byte.toUnsignedInt(data[12]) == 0x89 && Byte.toUnsignedInt(data[13]) == 0x42) {
 							if (Global.topoType == TopologyType.LINEAR) {
 								if (node == Global.ROOTNODE || node == Global.LEAFNODE) {
 									if (node.getLLDP_IN().size() < 1) {
@@ -209,6 +212,7 @@ public class PacketHandler {
 									}
 								}
 							} else {
+								//TODO: mininet type일 때도 고려
 								if(node == Global.ROOTNODE || node == Global.LEAFNODE) {
 									// Ring
 									if(node.getLLDP_IN().size() < 2) {
@@ -477,7 +481,7 @@ public class PacketHandler {
 		
 	}
 
-	public static void SEND_MSG(ChannelHandlerContext ctx, OFMessage ofMessage) {// 发送信息
+	public static void SEND_MSG(ChannelHandlerContext ctx, OFMessage ofMessage) {
 		if (ctx.getChannel().isOpen()) {
 			ctx.getChannel().write(ofMessage);
 
