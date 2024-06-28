@@ -55,10 +55,11 @@ public class TopologyDiscovery {
 			}
 
 			for (int i = 0; i < Global.NUMBER_OF_TEST_SWITCH; i++) {
-				for (int j = 0; j < nodes[i].getLLDP_OUT().size(); j++) {
+				for (int j = 0; j < nodes[i].getLLDP_OUT().size(); j++)
 					Result.TOPOLOGY_DISCOVERY_LLDP_OUT.add(nodes[i].getLLDP_OUT().get(j));
+
+				for(int j = 0; j < nodes[i].getLLDP_IN().size(); j++)
 					Result.TOPOLOGY_DISCOVERY_LLDP_IN.add(nodes[i].getLLDP_IN().get(j));
-				}
 			}
 
 			Log.ADD_LOG_PANEL("Tasks 0 Completed. Discovery Time: "
