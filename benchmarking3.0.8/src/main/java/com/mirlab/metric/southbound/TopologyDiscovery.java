@@ -43,7 +43,7 @@ public class TopologyDiscovery {
 
 			Tasks.HAS_STARTED = true;
 
-			Thread.sleep(10000); // 10s - controller와 switch 간 tcp 연결 완료될 때까지 wait
+			Thread.sleep(10000); // 10s
 
 			try { // 휴식 15s - Trial Duration
 

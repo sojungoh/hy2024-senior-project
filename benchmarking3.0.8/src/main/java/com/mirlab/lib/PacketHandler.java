@@ -184,46 +184,28 @@ public class PacketHandler {
 			* if data 12-13bytes are 0x88cc,
 			* it means that data type is a 802.1 Link Layer Discovery Protocol (LLDP)
 			* if data 12-13bytes are 0x8942,
-			* it means that data type is unknown, and it actually represents packet_in message
+			* it means that data type is unknown, and it actually represents broadcast message
 			*/
-			if ((Byte.toUnsignedInt(data[12]) == 0x88 && Byte.toUnsignedInt(data[13]) == 0xcc)
-					|| (Byte.toUnsignedInt(data[12]) == 0x89 && Byte.toUnsignedInt(data[13]) == 0x42)) {
+			if(Byte.toUnsignedInt(data[12]) == 0x88 && Byte.toUnsignedInt(data[13]) == 0xcc) {
 
 				logger.debug("LLDP Received..Action Port is " + actionPortNum);
 
 				if (Global.southboundMetric == SouthboundMetric.TOPOLOGY_DISCOVERY_TIME) {
 
 					if(Tasks.HAS_STARTED) {
-						if(Byte.toUnsignedInt(data[12]) == 0x88 && Byte.toUnsignedInt(data[13]) == 0xcc) {
+						// Packet Out 시간 측정
+						if(node.getLLDP_OUT().size() < node.getPortList().size())
+							BenchmarkTimer.ADD_CURRENT_TIME(node.getLLDP_OUT()); // getLLDP_OUT: ArrayList<Long>에 현재 시간 추가
 
-							if(node.getLLDP_OUT().size() < node.getPortList().size())
-								BenchmarkTimer.ADD_CURRENT_TIME(node.getLLDP_OUT()); // getLLDP_OUT: ArrayList<Long>에 현재 시간 추가
-
-						}
-						else if(Byte.toUnsignedInt(data[12]) == 0x89 && Byte.toUnsignedInt(data[13]) == 0x42) {
-							if (Global.topoType == TopologyType.LINEAR) {
-								if (node == Global.ROOTNODE || node == Global.LEAFNODE) {
-									if (node.getLLDP_IN().size() < 1) {
-										BenchmarkTimer.ADD_CURRENT_TIME(node.getLLDP_IN());
-									}
-								} else {
-									if (node.getLLDP_IN().size() < 2) {
-										BenchmarkTimer.ADD_CURRENT_TIME(node.getLLDP_IN());
-									}
-								}
-							} else {
-								//TODO: mininet type일 때도 고려
-								if(node == Global.ROOTNODE || node == Global.LEAFNODE) {
-									// Ring
-									if(node.getLLDP_IN().size() < 2) {
-										BenchmarkTimer.ADD_CURRENT_TIME(node.getLLDP_IN());
-									}
-								}
-								else {
-									if (node.getLLDP_IN().size() < node.getPortList().size()) {
-										BenchmarkTimer.ADD_CURRENT_TIME(node.getLLDP_IN());
-									}
-								}
+						// Packet In 시간 측정
+						// TODO: Linear와 Ring 타입일 때 - 다른 토폴로지에서도 유효한지 고려해야 함
+						if (node == Global.ROOTNODE || node == Global.LEAFNODE) {
+							if (node.getLLDP_IN().size() < node.getPortList().size() - 1) {
+								BenchmarkTimer.ADD_CURRENT_TIME(node.getLLDP_IN());
+							}
+						} else {
+							if (node.getLLDP_IN().size() < node.getPortList().size()) {
+								BenchmarkTimer.ADD_CURRENT_TIME(node.getLLDP_IN());
 							}
 						}
 					}
