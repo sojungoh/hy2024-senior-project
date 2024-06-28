@@ -145,7 +145,9 @@ public class PacketHandler {
 				 */
 				logger.debug("flood msg: " + packetOut);
 			} else {
+
 				actionPortNum = Integer.parseInt(action.substring(action.indexOf("=") + 1, action.indexOf(","))) - 1;
+
 				if (node.getPortList().get(actionPortNum).getConnectedPort() != null) {
 					// this port connects with another node's port
 					if (node.getPortList().get(actionPortNum).getPortState() == 0 // 0:up 1:down
@@ -158,6 +160,7 @@ public class PacketHandler {
 
 						node.getPortList().get(actionPortNum).getConnectedPort().getBelong2Node().sendPacketIn(ofpi);
 					}
+
 				} else if (node.getPortList().get(actionPortNum).getConnectedHostList() != null) {
 					// this port connects with host or hosts
 
@@ -169,7 +172,6 @@ public class PacketHandler {
 							Result.ASYNCHRONOUS_MESSAGE_PROCESSING_TIME_LIST_OFOUT.add(System.nanoTime());
 
 						}
-
 					}
 
 				} else if (node.getPortList().get(actionPortNum).getDistributedPort() != null) {
@@ -198,12 +200,24 @@ public class PacketHandler {
 							BenchmarkTimer.ADD_CURRENT_TIME(node.getLLDP_OUT()); // getLLDP_OUT: ArrayList<Long>에 현재 시간 추가
 
 						// Packet In 시간 측정
-						// TODO: Linear와 Ring 타입일 때 - 다른 토폴로지에서도 유효한지 고려해야 함
-						if (node == Global.ROOTNODE || node == Global.LEAFNODE) {
-							if (node.getLLDP_IN().size() < node.getPortList().size() - 1) {
-								BenchmarkTimer.ADD_CURRENT_TIME(node.getLLDP_IN());
+						if(Global.topoType == TopologyType.LINEAR) {
+							if((node == Global.ROOTNODE && actionPortNum == 0)
+									|| (node == Global.LEAFNODE && actionPortNum == 1)) {
+
+								if (node.getLLDP_IN().size() < node.getPortList().size() - 1)
+									BenchmarkTimer.ADD_CURRENT_TIME(node.getLLDP_IN());
+
 							}
-						} else {
+						}else if(Global.topoType == TopologyType.RING) {
+							if((node == Global.ROOTNODE || node == Global.LEAFNODE)
+									&& actionPortNum == node.getPortList().getLast().getPortNum()) {
+
+								if (node.getLLDP_IN().size() < node.getPortList().size() - 1)
+									BenchmarkTimer.ADD_CURRENT_TIME(node.getLLDP_IN());
+
+							}
+						}else {
+							// TODO: mininet type일 때 토폴로지별 고려
 							if (node.getLLDP_IN().size() < node.getPortList().size()) {
 								BenchmarkTimer.ADD_CURRENT_TIME(node.getLLDP_IN());
 							}
@@ -277,8 +291,8 @@ public class PacketHandler {
 				}
 
 			} else {// asynchronous metric - 알 수 없는 lldp message
-				if(Byte.toUnsignedInt(data[13]) == 66 && Byte.toUnsignedInt(data[12]) == 137)
-					logger.debug("data[13]=66 msg: " + packetOut);
+				if(Byte.toUnsignedInt(data[12]) == 0x89 && Byte.toUnsignedInt(data[13]) == 0x42)
+					logger.debug("unknown type msg: " + packetOut);
 				else
 					logger.debug("Received Packet_out(unknown packet reply)");
 			}

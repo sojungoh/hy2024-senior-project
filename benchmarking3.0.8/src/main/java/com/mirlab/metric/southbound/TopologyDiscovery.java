@@ -41,9 +41,9 @@ public class TopologyDiscovery {
 			CreateTopo ct = new CreateTopo(Global.SWITCH_ID_OFF_SET);
 			nodes = ct.go();
 
-			Tasks.HAS_STARTED = true;
+			Thread.sleep(10000); // 휴식 10s
 
-			Thread.sleep(10000); // 10s
+			Tasks.HAS_STARTED = true;
 
 			try { // 휴식 15s - Trial Duration
 
@@ -57,8 +57,6 @@ public class TopologyDiscovery {
 			for (int i = 0; i < Global.NUMBER_OF_TEST_SWITCH; i++) {
 				for (int j = 0; j < nodes[i].getLLDP_OUT().size(); j++) {
 					Result.TOPOLOGY_DISCOVERY_LLDP_OUT.add(nodes[i].getLLDP_OUT().get(j));
-				}
-				for (int j = 0; j < nodes[i].getLLDP_IN().size(); j++) {
 					Result.TOPOLOGY_DISCOVERY_LLDP_IN.add(nodes[i].getLLDP_IN().get(j));
 				}
 			}
