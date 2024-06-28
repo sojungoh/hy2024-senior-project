@@ -201,20 +201,28 @@ public class PacketHandler {
 
 						// Packet In 시간 측정
 						if(Global.topoType == TopologyType.LINEAR) {
-							if((node == Global.ROOTNODE && actionPortNum == 0)
-									|| (node == Global.LEAFNODE && actionPortNum == 1)) {
-
-								if (node.getLLDP_IN().size() < node.getPortList().size() - 1)
+							if(node == Global.ROOTNODE) {
+								if (actionPortNum == 0 && node.getLLDP_IN().size() < node.getPortList().size() - 1)
 									BenchmarkTimer.ADD_CURRENT_TIME(node.getLLDP_IN());
-
+							}
+							else if(node == Global.LEAFNODE) {
+								if(actionPortNum == 1 && node.getLLDP_IN().size() < node.getPortList().size() - 1)
+									BenchmarkTimer.ADD_CURRENT_TIME(node.getLLDP_IN());
+							}
+							else {
+								if(node.getLLDP_IN().size() < node.getPortList().size())
+									BenchmarkTimer.ADD_CURRENT_TIME(node.getLLDP_IN());
 							}
 						}else if(Global.topoType == TopologyType.RING) {
-							if((node == Global.ROOTNODE || node == Global.LEAFNODE)
-									&& actionPortNum == node.getPortList().getLast().getPortNum()) {
-
-								if (node.getLLDP_IN().size() < node.getPortList().size() - 1)
+							if(node == Global.ROOTNODE || node == Global.LEAFNODE) {
+								if(actionPortNum == node.getPortList().getLast().getPortNum()
+										&& node.getLLDP_IN().size() < node.getPortList().size() - 1) {
 									BenchmarkTimer.ADD_CURRENT_TIME(node.getLLDP_IN());
-
+								}
+							}
+							else {
+								if (node.getLLDP_IN().size() < node.getPortList().size())
+									BenchmarkTimer.ADD_CURRENT_TIME(node.getLLDP_IN());
 							}
 						}else {
 							// TODO: mininet type일 때 토폴로지별 고려
