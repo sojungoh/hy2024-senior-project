@@ -81,8 +81,6 @@ public class TopologyDiscovery {
 
 			Initializer.INITIAL_CHANNEL_POOL();
 
-			Tasks.HAS_STARTED = false;
-
 		} catch (InterruptedException e1) {
 			e1.printStackTrace();
 			Main.gui.S_progressBarTotal.setValue(1);
