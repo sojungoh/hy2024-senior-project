@@ -115,9 +115,9 @@ public class TopologyChangeDetection {
 							- (Long) Result.TOPOLOGY_CHANGE_DETECTION_TIME_LIST_LLDP.get(0);
 
 					// TODO: 이걸 왜 하지?
-					if (Math.abs(timeOfLinkDown - timeOfLinkUp) > (long) 10000000) {
-						timeOfLinkUp = timeOfLinkDown - 432123;// 黑暗面？
-					}
+//					if (Math.abs(timeOfLinkDown - timeOfLinkUp) > (long) 10000000) {
+//						timeOfLinkUp = timeOfLinkDown - 432123;// 黑暗面？
+//					}
 				}
 			}
 
