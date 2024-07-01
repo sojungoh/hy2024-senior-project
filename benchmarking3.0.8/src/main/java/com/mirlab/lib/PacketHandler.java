@@ -215,7 +215,7 @@ public class PacketHandler {
 							}
 						}else if(Global.topoType == TopologyType.RING) {
 							if(node == Global.ROOTNODE || node == Global.LEAFNODE) {
-								if(actionPortNum == node.getPortList().getLast().getPortNum()
+								if(actionPortNum != node.getPortList().getLast().getPortNum()
 										&& node.getLLDP_IN().size() < node.getPortList().size() - 1) {
 									BenchmarkTimer.ADD_CURRENT_TIME(node.getLLDP_IN());
 								}
