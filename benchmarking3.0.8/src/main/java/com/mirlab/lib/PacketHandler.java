@@ -218,12 +218,12 @@ public class PacketHandler {
 				}
 
 				// made by haojun 20170407
-				if (Global.southboundMetric == SouthboundMetric.TOPOLOGY_CHANGE_DETECTION_TIME_LINK_DOWN_UP
-						/*&& (Byte.toUnsignedInt(data[13]) == 0xcc && Byte.toUnsignedInt(data[12]) == 136)*/) {
+				if (Global.southboundMetric == SouthboundMetric.TOPOLOGY_CHANGE_DETECTION_TIME_LINK_DOWN_UP) {
 					if (TopologyChangeDetection.HAS_STARTED) {
 
 						BenchmarkTimer.ADD_CURRENT_TIME(Result.TOPOLOGY_CHANGE_DETECTION_TIME_LIST_LLDP);
 
+						// source switch
 						if (node == Global.ROOTNODE) {
 							new Thread(() -> {
 								node.sendPacket(TopologyChangeDetection.ofmSrcDown);
@@ -238,7 +238,7 @@ public class PacketHandler {
 
 								try {
 									if (Global.conTroller == Controller.ONOS) {
-										Thread.sleep(3000);
+										Thread.sleep(3000); // 3s
 									} else if (Global.conTroller == Controller.OPENDAYLIGHT) {
 										Thread.sleep(5000);
 									} else {

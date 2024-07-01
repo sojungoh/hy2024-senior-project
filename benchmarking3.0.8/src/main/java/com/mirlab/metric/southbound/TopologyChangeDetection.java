@@ -95,8 +95,7 @@ public class TopologyChangeDetection {
 			HAS_STARTED = true;
 			Tasks.HAS_STARTED = true;
 
-			//Thread.sleep(15000);
-			Thread.sleep(40000);
+			Thread.sleep(15000);
 
 			Log.ADD_LOG_PANEL("Test Completed!", TopologyChangeDetection.class.getSimpleName());
 
