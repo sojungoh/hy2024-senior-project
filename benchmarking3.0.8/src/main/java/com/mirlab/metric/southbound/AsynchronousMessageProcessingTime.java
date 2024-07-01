@@ -65,7 +65,7 @@ public class AsynchronousMessageProcessingTime {
 				Tasks.HAS_STARTED = true;
 
 				sendPacket(src.getConnectedNode(), src_ofpi);
-			} else {// tcp udp?
+			} else {// tcp udp
 
 				byte srcTempPacket[] = PacketMaker_NEW.MAKE_ARP_PACKET_BYTE(Global.ARP_REPLY_GRATUITOUS, src, dst);
 				OFMessage src_ofpi = PacketMaker_NEW.MAKE_OPENFLOW_PACKET_IN(src.getBelong2Port(), srcTempPacket);
@@ -95,34 +95,35 @@ public class AsynchronousMessageProcessingTime {
 
 			Thread.sleep(1000);
 
-			if (Result.ASYNCHRONOUS_MESSAGE_PROCESSING_TIME_LIST_OFIN.size() < 5
-					|| Result.ASYNCHRONOUS_MESSAGE_PROCESSING_TIME_LIST_OFOUT.size() < 5) {
-				
-				Result.ADD_RESULT("-", 3, 2);
-				Log.ADD_LOG_PANEL("Error! Please Check Reactive Module of SDN Controller!", Tasks.class.toString());
-				JOptionPane.showMessageDialog(null,
-						"Please Check Reactive Module of SDN Controller or change packet type!", "Error!",
-						JOptionPane.ERROR_MESSAGE);
-			} else {
-				
-				Result.ADD_RESULT(df.format(BenchmarkTimer.GET_AVERAGE_TIME_WITHOUT_RE(
-						Result.ASYNCHRONOUS_MESSAGE_PROCESSING_TIME_LIST_OFOUT,
-						Result.ASYNCHRONOUS_MESSAGE_PROCESSING_TIME_LIST_OFIN)), 3, 2);
-				Log.ADD_LOG_PANEL("size of in: " + Result.ASYNCHRONOUS_MESSAGE_PROCESSING_TIME_LIST_OFIN.size(),
-						Tasks.class.toString());
-				Log.ADD_LOG_PANEL("size of out: " + Result.ASYNCHRONOUS_MESSAGE_PROCESSING_TIME_LIST_OFOUT.size(),
-						Tasks.class.toString());
-				Log.ADD_LOG_PANEL(
-						"Average processing time : " + df.format(BenchmarkTimer.GET_AVERAGE_TIME_WITHOUT_RE(
-								Result.ASYNCHRONOUS_MESSAGE_PROCESSING_TIME_LIST_OFOUT,
-								Result.ASYNCHRONOUS_MESSAGE_PROCESSING_TIME_LIST_OFIN)) + " ms",
-						Tasks.class.toString());
+			Result.ADD_RESULT(df.format(BenchmarkTimer.GET_AVERAGE_TIME_WITHOUT_RE(
+					Result.ASYNCHRONOUS_MESSAGE_PROCESSING_TIME_LIST_OFOUT,
+					Result.ASYNCHRONOUS_MESSAGE_PROCESSING_TIME_LIST_OFIN)), 3, 2);
+			Log.ADD_LOG_PANEL("size of in: " + Result.ASYNCHRONOUS_MESSAGE_PROCESSING_TIME_LIST_OFIN.size(),
+					Tasks.class.toString());
+			Log.ADD_LOG_PANEL("size of out: " + Result.ASYNCHRONOUS_MESSAGE_PROCESSING_TIME_LIST_OFOUT.size(),
+					Tasks.class.toString());
+			Log.ADD_LOG_PANEL(
+					"Average processing time : " + df.format(BenchmarkTimer.GET_AVERAGE_TIME_WITHOUT_RE(
+							Result.ASYNCHRONOUS_MESSAGE_PROCESSING_TIME_LIST_OFOUT,
+							Result.ASYNCHRONOUS_MESSAGE_PROCESSING_TIME_LIST_OFIN)) + " ms",
+					Tasks.class.toString());
 
-				Log.ADD_LOG_PANEL("Test Completed!", Tasks.class.toString());
+			Log.ADD_LOG_PANEL("Test Completed!", Tasks.class.toString());
 
-			}
+//			if (Result.ASYNCHRONOUS_MESSAGE_PROCESSING_TIME_LIST_OFIN.size() < 5
+//					|| Result.ASYNCHRONOUS_MESSAGE_PROCESSING_TIME_LIST_OFOUT.size() < 5) {
+//
+//				Result.ADD_RESULT("-", 3, 2);
+//				Log.ADD_LOG_PANEL("Error! Please Check Reactive Module of SDN Controller!", Tasks.class.toString());
+//				JOptionPane.showMessageDialog(null,
+//						"Please Check Reactive Module of SDN Controller or change packet type!", "Error!",
+//						JOptionPane.ERROR_MESSAGE);
+//			} else {
+//
+//			}
 			Main.gui.S_progressBarTotal.setValue(1);
 			Initializer.INITIAL_CHANNEL_POOL();
+
 		} catch (InterruptedException e1) {
 			
 			e1.printStackTrace();
