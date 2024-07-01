@@ -56,7 +56,8 @@ public class TopologyChangeDetection {
 			nodes = ct.go();
 
 			// TODO: Topology Discovery 완료된 다음에 진행되어야 함
-			Thread.sleep(5000);
+			//Thread.sleep(5000);
+			Thread.sleep(10000); // 10s
 
 			OFPortDesc ofdSrcDown;
 			OFPortDesc ofdDstDown;
