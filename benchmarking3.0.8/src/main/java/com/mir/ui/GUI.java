@@ -580,7 +580,7 @@ public class GUI {
 		S_controller1IpPort.setAutoscrolls(false);
 		S_controller1IpPort.setMargin(new Insets(3, 3, 3, 3));
 		S_controller1IpPort.setBorder(new LineBorder(new Color(0, 0, 0)));
-		S_controller1IpPort.setText("192.168.1.114:6633");
+		S_controller1IpPort.setText("127.0.0.1:6633");
 		S_controller1IpPort.setFont(new Font("Times New Roman", Font.PLAIN, 12));
 		S_controller1IpPort.setBounds(142, 40, 160, 18);
 		panel.add(S_controller1IpPort);
